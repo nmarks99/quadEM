@@ -1,0 +1,932 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Databases &mdash; EPICS support for quad electrometers/picoammeters</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/my_theme.css?v=254ed751" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Plugins" href="plugins.html" />
+    <link rel="prev" title="Overview" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            quadEM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Databases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quadem-template">quadEM.template</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="averaging.html">Averaging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tetramm_modes.html">TetrAMM and FX4 Acquisition Modes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tetramm_scanning.html">Scanning with the TetrAMM or FX4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feedback.html">Using Feedback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streaming.html">Streaming data to disk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">quadEM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Databases</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/databases.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="databases">
+<h1>Databases<a class="headerlink" href="#databases" title="Link to this heading"></a></h1>
+<section id="quadem-template">
+<h2>quadEM.template<a class="headerlink" href="#quadem-template" title="Link to this heading"></a></h2>
+<p>The quadEM.template database provides control of the electrometer using the standard
+asyn device support. <a class="reference external" href="https://areadetector.github.io/areaDetector/ADCore/NDPluginStats.html">NDPluginStats</a> from <a class="reference external" href="https://github.com/areaDetector/ADCore">ADCore</a> provides digitally averaged readings of the current, sum, difference
+and position with user-defined averaging time. It also provides the standard deviation,
+minimum, maximum, and other statistics, including a histogram of array values.</p>
+<table class="table-bordered table-striped table-hover docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>drvInfo string</p></th>
+<th class="head"><p>EPICS record name</p></th>
+<th class="head"><p>EPICS record type</p></th>
+<th class="head"><p>asyn interface</p></th>
+<th class="head"><p>Access</p></th>
+<th class="head"><p>Models supported</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>QE_MODEL</p></td>
+<td><p>$(P)$(R)Model</p></td>
+<td><p>mbbi</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>The model of the electrometer. This is normally determined automatically by the
+driver by reading the firmware version. It can also be specified in the configuration
+command. Values are:</p>
+<ul class="simple">
+<li><p>0: Unknown</p></li>
+<li><p>1: AH401B</p></li>
+<li><p>2: AH401D</p></li>
+<li><p>3: AH501</p></li>
+<li><p>4: AH501BE</p></li>
+<li><p>5: AH501C</p></li>
+<li><p>6: AH501D</p></li>
+<li><p>7: TetrAMM</p></li>
+<li><p>8: NSLS_EM</p></li>
+<li><p>9: NSLS2_EM</p></li>
+<li><p>10: NSLS2_IC</p></li>
+<li><p>11: PCR4</p></li>
+<li><p>12: SoftDevice</p></li>
+<li><p>13: T4U</p></li>
+<li><p>14: FX4</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>QE_FIRMWARE</p></td>
+<td><p>$(P)$(R)Firmware</p></td>
+<td><p>waveform</p></td>
+<td><p>asynOctet</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>The firmware version of the electrometer. In R6-0 this was changed from a stringin
+record to a waveform record of length 256 because the TetrAMM firmware string is
+longer than 40 characters.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_ACQUIRE_MODE</p></td>
+<td><p>$(P)$(R)AcquireMode, $(P)$(R)AcquireMode_RBV</p></td>
+<td><p>bo, bi</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Acquire mode. Values are:</p>
+<ul class="simple">
+<li><p>0: “Continuous” Acquires data continuously until Acquire is set back to 0.</p></li>
+<li><p>1: “Multiple” Acquires NumAcquire acquisitions and then automatically stops acquisition,
+setting Acquire back to 0.</p></li>
+<li><p>2: “Single” Acquires a single acquisition. This is a convenience, it is identical
+to Multiple with NumAcquire=1.</p></li>
+</ul>
+<p>Multiple and Single mode are typically used for data acquisition.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>ACQUIRE</p></td>
+<td><p>$(P)$(R)Acquire</p></td>
+<td><p>bo</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Acquire command. This command turns acquisition from the device on (1) and off (0).
+This record is defined in ADCore.
+It links to a “busy” record, so the device can be used for step-scanning with the sscan
+record when AcquireMode=Single. <br>
+<strong>Important note:</strong> Operation in Single mode with the sscan record also requires
+that WaitForPlugins be set to Yes so that the driver waits for the statistics plugins to compute
+before it sets Acquire back to 0.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_READ_FORMAT</p></td>
+<td><p>$(P)$(R)ReadFormat, $(P)$(R)ReadFormat_RBV</p></td>
+<td><p>bo, bi</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>All except NSLS_EM, NSLS2_EM, and PCR4</p></td>
+<td><p>Read format from the device. Values are:</p>
+<ul class="simple">
+<li><p>0: Binary</p></li>
+<li><p>1: ASCII</p></li>
+</ul>
+<p>In binary mode the AH401 and AH501 send integer data with no delimiters or terminators.
+This can lead to problems if the data stream is somehow corrupted because there
+is no way to know where one set of readings end and the next set begins. This should
+not happen under normal conditions because the devices use TCP, which guarantees
+retransmission of dropped packets. However, it has been observed to occur. In binary
+mode the TetrAMM sends IEEE 754 double-precision values for each channel, followed
+by a Signalling NaN. The NaN is thus effectively a terminator that can be used to
+synchronize the data stream if it is somehow corrupted. ASCII mode is robust against
+the synchronization problem, since each reading ends with terminator characters.
+However, ASCII mode is generally slower. On the AH401 ASCII mode appears to be able
+to do 500 reading/s, which is sufficient except for the case when IntegrationTime=.001
+and PingPong=Yes. On the AH501 ASCII mode ranges from 7 to 10 times slower than
+binary mode. On the TetrAMM ASCII mode requires a minimum value of ValuesPerRead
+of 500, which limits the update rate to 200 Hz. In binary mode the minimum value
+of ValuesPerRead is 5, which is an update date of 20 kHz, or 100 times faster than
+ASCII mode.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>QE_RANGE</p></td>
+<td><p>$(P)$(R)Range, $(P)$(R)Range_RBV ($(P)$(R)Range[1-4], $(P)$(R)Range[1-4]_RBV])</p></td>
+<td><p>mbbo, mbbi</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Range command. This selects the sensitivity of the electrometer (A/D units per nanoamp).
+Most models only support a single range for all 4 channels, and the Range record controls that.
+The TetrAMM supports independent ranges for each channel, and the Range[1-4] and Range[1-4]_RBV
+record control those.  Writing to the Range record will set Range[1-4] all to the same value. <br>
+For the TetrAMM there are two choices which are specified when the unit is ordered.
+Typical values are:</p>
+<ul class="simple">
+<li><p>±120uA</p></li>
+<li><p>±120nA</p></li>
+</ul>
+<p>For the FX4 the choices are:</p>
+<ul class="simple">
+<li><p>±100nA, 1 kHz BW</p></li>
+<li><p>±100nA, 10 kHz BW</p></li>
+<li><p>±1uA, 5 kHz BW</p></li>
+<li><p>±1uA, 50 kHz BW</p></li>
+<li><p>±10uA, 50 kHz BW</p></li>
+<li><p>±100uA, 50 kHz BW</p></li>
+<li><p>±1mA, 50 kHz BW</p></li>
+<li><p>±10mA, 50 kHz BW</p></li>
+</ul>
+<p>For the AH501 series the choices are:</p>
+<ul class="simple">
+<li><p>±2.5mA</p></li>
+<li><p>±2.5uA</p></li>
+<li><p>±2.5nA</p></li>
+</ul>
+<p>For the AH401 series this selects the feedback capacitor, which controls the gain
+of the device. There are 8 capacitor choices in units of saturation charge:</p>
+<ul class="simple">
+<li><p>1800 pC</p></li>
+<li><p>350 pC</p></li>
+<li><p>300 pC</p></li>
+<li><p>250 pC</p></li>
+<li><p>200 pC</p></li>
+<li><p>150 pC</p></li>
+<li><p>100 pC</p></li>
+<li><p>50 pC</p></li>
+</ul>
+<p>For the NSLS_EM this selects the feedback capacitor, which controls the gain of
+the device. There are 8 capacitor choices in units of saturation charge:</p>
+<ul class="simple">
+<li><p>350 pC</p></li>
+<li><p>300 pC</p></li>
+<li><p>250 pC</p></li>
+<li><p>200 pC</p></li>
+<li><p>150 pC</p></li>
+<li><p>100 pC</p></li>
+<li><p>50 pC</p></li>
+<li><p>12 pC</p></li>
+</ul>
+<p>For the NSLS2_EM this there are 5 ranges:</p>
+<ul class="simple">
+<li><p>1 uA</p></li>
+<li><p>10 uA</p></li>
+<li><p>100 uA</p></li>
+<li><p>1000 uA</p></li>
+<li><p>5000 uA</p></li>
+</ul>
+<p>For the PCR4 v1 there is 1 range:</p>
+<ul class="simple">
+<li><p>50 uA</p></li>
+</ul>
+<p>For the PCR4 v2 there are 4 ranges:</p>
+<ul class="simple">
+<li><p>50 mA</p></li>
+<li><p>250 uA</p></li>
+<li><p>2.5 uA</p></li>
+<li><p>25 nA</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>QE_PING_PONG</p></td>
+<td><p>$(P)$(R)PingPong, $(P)$(R)PingPong_RBV</p></td>
+<td><p>mbbo, mbbi</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>AH401 series, NSLS_EM</p></td>
+<td><p>The AH401 series, and the NSLS_EM have 2 input channels, which we call Ping
+and Pong here. This doubles the speed of the unit, because one channel is being
+digitized while the other is integrating. This record selects how the two channels
+are treated. <br>
+On the AH401 series the choices are “Off” (0) and “On” (1). “Off” only returns the
+data from the Ping channel. This reduces noise because only a single integration
+capacitor is used, but it reduces the data rate by a factor of two, because data
+are only returned on every other integration time. “On” returns the data from both
+channels, which doubles the data rate at some expense in noise. <br>
+On the NSLS_EM the choices are “Phase0” (0), “Phase1” (1), and “Both (2). “Phase0”
+only returns the data from the Phase0 channel, Phase1 from the Phase1 channel, and
+Both from both Phase0 and Phase1. The device can only return Phase0 and Phase1 correctly
+when ValuesPerRead=1. The driver automatically sets PingPong=Both if ValuesPerRead
+is not 1. <br></p></td>
+</tr>
+<tr class="row-odd"><td><p>QE_INTEGRATION_TIME</p></td>
+<td><p>$(P)$(R)IntegrationTime, $(P)$(R)IntegrationTime_RBV</p></td>
+<td><p>ao, ai</p></td>
+<td><p>asynFloat64</p></td>
+<td><p>r/w</p></td>
+<td><p>AH401 series, NSLS_EM</p></td>
+<td><p>Selects the integration time of the amplifier. As the integration time is increased
+the sensitivity increases, but the number of readings/sec sent from the device is
+decreased. <br>
+For the AH401 series values range from 0.001s to 1.000s. The data are sent after
+one integration time if PingPong=”On” or after 2 integration times if PingPong=”Off”. <br>
+For the NSLS_EM the values range from .0004s to 1.0 s. Both the Phase0 (Ping) and
+Phase1 (Pong) values are sent at after a time period equal to IntegrationTime *
+ValuesPerRead. <br></p></td>
+</tr>
+<tr class="row-even"><td><p>QE_NUM_CHANNELS</p></td>
+<td><p>$(P)$(R)NumChannels, $(P)$(R)NumChannels_RBV</p></td>
+<td><p>mbbo, mbbi</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>TetrAMM and AH501 series</p></td>
+<td><p>Selects the number of channels to measure and transmit data for. Using fewer than
+4 channels increases the sampling rate. Allowed choices are:</p>
+<ul class="simple">
+<li><p>1: channel 1 only</p></li>
+<li><p>2: channels 1 and 2 only</p></li>
+<li><p>4: channels 1-4</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>QE_GEOMETRY</p></td>
+<td><p>$(P)$(R)Geometry, $(P)$(R)Geometry_RBV</p></td>
+<td><p>mbbo, mbbi</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Selects the geometry of the current inputs as discussed above. Allowed choices are:</p>
+<ul class="simple">
+<li><p>0: Diamond</p></li>
+<li><p>1: Square</p></li>
+<li><p>2: SquareCC</p></li>
+<li><p>3: Custom</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>QE_RESOLUTION</p></td>
+<td><p>$(P)$(R)Resolution, $(P)$(R)Resolution_RBV</p></td>
+<td><p>mbbo, mbbi</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>AH501 series</p></td>
+<td><p>Selects the resolution of the ADC in bits. Using 16-bits increases the sampling
+rate by a factor of 2 relative to 24-bits. Allowed choices are:</p>
+<ul class="simple">
+<li><p>16: 16-bit data</p></li>
+<li><p>24: 24-bit data</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>QE_BIAS_STATE</p></td>
+<td><p>$(P)$(R)BiasState, $(P)$(R)BiasState_RBV</p></td>
+<td><p>bo, bi</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>TetrAMM, FX4, AH501C, AH501D, and PCR4</p></td>
+<td><p>Selects the state of the bias supply output voltage. Allowed choices are:</p>
+<ul class="simple">
+<li><p>0: Off</p></li>
+<li><p>1: On</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>QE_HVS_READBACK</p></td>
+<td><p>$(P)$(R)HVSReadback</p></td>
+<td><p>bi</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/o</p></td>
+<td><p>TetrAMM, FX4</p></td>
+<td><p>Readback of the actual status of the bias supply output. Possible values are:</p>
+<ul class="simple">
+<li><p>0: Off</p></li>
+<li><p>1: On</p></li>
+</ul>
+<p>This will stay On for a few seconds after setting BiasState to Off, while the voltage
+is ramped down to 0.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>QE_BIAS_INTERLOCK</p></td>
+<td><p>$(P)$(R)BiasInterlock, $(P)$(R)BiasInterlock_RBV</p></td>
+<td><p>bo, bi</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>TetrAMM</p></td>
+<td><p>Selects the state of the bias supply interlock. Allowed choices are:</p>
+<ul class="simple">
+<li><p>0: Off</p></li>
+<li><p>1: On</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>QE_BIAS_VOLTAGE</p></td>
+<td><p>$(P)$(R)BiasVoltage, $(P)$(R)BiasVoltage_RBV</p></td>
+<td><p>ao, ai</p></td>
+<td><p>asynFloat64</p></td>
+<td><p>r/w</p></td>
+<td><p>TetrAMM, FX4, AH501C, AH501D, NSLS2_EM, and PCR4</p></td>
+<td><p>Controls the voltage of the bias supply output.</p></td>
+</tr>
+<tr class="row-odd"><td><p>QE_HVV_READBACK</p></td>
+<td><p>$(P)$(R)HVVReadback</p></td>
+<td><p>ai</p></td>
+<td><p>asynFloat64</p></td>
+<td><p>r/o</p></td>
+<td><p>TetrAMM, FX4</p></td>
+<td><p>Readback of the actual voltage of the bias supply output.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_HVI_READBACK</p></td>
+<td><p>$(P)$(R)HVIReadback</p></td>
+<td><p>ai</p></td>
+<td><p>asynFloat64</p></td>
+<td><p>r/o</p></td>
+<td><p>TetrAMM</p></td>
+<td><p>Readback of the actual current in microamps of the bias supply output.</p></td>
+</tr>
+<tr class="row-odd"><td><p>QE_VALUES_PER_READ</p></td>
+<td><p>$(P)$(R)ValuesPerRead, $(P)$(R)ValuesPerRead_RBV</p></td>
+<td><p>longout, longin</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>On the TetrAMM this record controls the number of readings that are averaged in
+the TetrAMM using the NRSAMP command. The TetrAMM always digitizes at 100 kHz (10
+microseconds per sample). The minimum value of NRSAMP (and hence ValuesPerRead)
+in Binary mode is 5, which means the maximum number of values per second is 20000.
+Setting ValuesPerRead to 100, for example, will average 100 readings in the TetrAMM,
+and thus result in a 1000 values per second sent from the TetrAMM to EPICS. <br>
+On the NSLS_EM and NSLS2_EM this record controls the number of readings that are
+summed in the hardware., For all other models ValuesPerRead controls the number of values that are read from
+the meter in a single call. These values are averaged in the driver before it does
+any callbacks. The default is 1 (no averaging). <br>
+Increasing ValuesPerRead will reduce the CPU time because:</p>
+<ul class="simple">
+<li><p>On the TetrAMM it reduces the number of readings per second sent, from the maximum
+of 20000, to 100000/ValuesPerRead.</p></li>
+<li><p>On the NSLS_EM it reduces the number of readings per second sent, from the maximum
+of 2500 (depending on IntegrationTime, to a maximum of 2500/ValuesPerRead.</p></li>
+<li><p>On the NSLS2_EM it reduces the number of readings per second sent, from the maximum
+of 10000 (depending on internal setting of ADC rate)to 10000/ValuesPerRead.</p></li>
+<li><p>On the AH401 and AH501 series the driver reduces the frequency of asynOctet-&amp;gt;read()
+calls by a factor of ValuesPerRead, because it can obtain multiple readings from
+the meter in a single call. This is particularly significant on the AH501 series,
+which can transmit up to 26,040 readings per second.</p></li>
+<li><p>It reduces the frequency of callbacks to device support.</p></li>
+</ul>
+<p>The potential disadvantages of larger values for ValuesPerRead are:</p>
+<ul class="simple">
+<li><p>It will change the statistics computed by the NDPluginStats plugin because an
+initial averaging operation has already been performed, which reduces the standard</p></li>
+<li><p>deviation, changes the histogram, etc.</p></li>
+<li><p>On the NSLS_EM it prevents selecting only Phase0 or Phase1 with the PingPong record.</p></li>
+<li><p>It will reduce the sampling frequency of the TimeSeries support</p></li>
+<li><p>It will reduce the update frequency of the EPID fast feedback support.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>QE_SAMPLE_TIME</p></td>
+<td><p>$(P)$(R)SampleTime_RBV</p></td>
+<td><p>ai</p></td>
+<td><p>asynFloat64</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>Provides the actual time between sample readings from the device. This is controlled
+by the following parameters:</p>
+<ul class="simple">
+<li><p>ValuesPerRead: All models</p></li>
+<li><p>IntegrationTime: AH401 series, NSLS_EM</p></li>
+<li><p>PingPong: AH401 series and NSLS_EM</p></li>
+<li><p>NumChannels: AH501 series</p></li>
+<li><p>Resolution: AH501 series</p></li>
+</ul>
+<p>The sample time on the TetrAMM and FX4 is controlled by the following equation:</p>
+<ul class="simple">
+<li><p>10 microseconds * ValuesPerRead.</p></li>
+</ul>
+<p>The sample time on the AH501 series is controlled by the following algorithm:</p>
+<ul class="simple">
+<li><p>SampleTime = 38.4 microseconds * NumChannels * ValuesPerRead</p></li>
+</ul>
+<p>If Resolution == 24 then SampleTime = SampleTime * 2 <br>
+The minimum sample time (NumChannels=1, ValuesPerRead=1, Resolution=16) is 38.4
+microseconds, or a sampling frequency of 26.04 kHz. The maximum sample time with
+ValuesPerRead=1, NumChannels=4, Resolution=24 is 307.2 microseconds, or a sampling
+frequency of 3.255 kHz. Setting ValuesPerRead &amp;gt; 1 will increase the sample time
+and reduce the sampling frequency proportionally. <br></p>
+<p>The sample time on the AH401 series is controlled by the following algorithm:</p>
+<ul class="simple">
+<li><p>SampleTime = IntegrationTime * ValuesPerRead</p></li>
+</ul>
+<p>If PingPong == 0 then SampleTime = SampleTime * 2 <br>
+The minimum sample time is 0.001 seconds, or 1 kHz sampling frequency. The maximum
+sampling time (PingPong=0) is 2 seconds, or 0.5 Hz sampling frequency. Setting ValuesPerRead
+&amp;gt; 1 will increase the sample time and reduce the sampling frequency proportionally.</p>
+<p>The sample time on the NSLS_EM is controlled by the following algorithm:</p>
+<ul class="simple">
+<li><p>SampleTime = IntegrationTime * ValuesPerRead</p></li>
+</ul>
+<p>If PingPong != Both then SampleTime = SampleTime * 2 <br>
+The minimum sample time is 0.00041 seconds, or 2.5 kHz sampling frequency. The maximum
+sampling time (PingPong!=Both) is 2 seconds, or 0.5 Hz sampling frequency. Setting
+ValuesPerRead &amp;gt; 1 will increase the sample time and reduce the sampling frequency
+proportionally. <br></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>QE_AVERAGING_TIME</p></td>
+<td><p>$(P)$(R)AveragingTime, $(P)$(R)AveragingTime_RBV</p></td>
+<td><p>ao, ai</p></td>
+<td><p>asynFloat64</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Controls the time period over which values are accumulated in the ring buffer before
+they are read out into NDArray objects and any registered plugins are called. AveragingTime
+is actually used to compute NumAverage_RBV=AveragingTime/SampleTime_RBV. The callbacks
+are done when the number of values in the ring buffer equals NumAverage_RBV, and
+exactly NumAverage_RBV values will be passed to the plugins. <br>
+However, setting AveragingTime=0 will set NumAverage_RBV=0 as well, and will disable
+automatic callbacks to areaDetector plugins. In this case data will only be read
+from the ring buffer when the ReadData record is processed. This will read out all
+available data from ring buffer, and the actual number of values read will be NumAveraged_RBV.
+This mode could be useful when the quadEM is being used for data acquisition, for
+example in a scan. In this case processing the ReadData record will read all values
+that have accumulated in the ring buffer since ReadData was last processed. ReadData
+must be processed frequently enough to avoid ring-buffer overflow. <br>
+On the TetrAMM in External Bulb mode and on the AH501BE in External Gate mode AveragingTime
+should be set to 0. The driver will force the averaging to occur each time it detects
+the falling edge of the gate pulse. This means that it will use the readings that
+happened while the gate pulse was high.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_NUM_AVERAGE</p></td>
+<td><p>$(P)$(R)NumAverage_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>Provides the number of values that will be accumulated in the ring buffer before
+they are read out into NDArray objects and any registered plugins are called. NumAverage_RBV
+is computed as (int)((AveragingTime / SampleTime_RBV) + 0.5).
+, On the TetrAMM when TriggerMode=External Bulb and on the AH501BE when TriggerMode=External
+Gate the AveragingTime is ignored and NumAverage_RBV will be 0. The averaging is
+done on all samples collected when the external gate signal is asserted.</p></td>
+</tr>
+<tr class="row-odd"><td><p>QE_NUM_AVERAGED</p></td>
+<td><p>$(P)$(R)NumAveraged_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>Provides the number of values that were actually accumulated in the ring buffer
+before they were read out into NDArray objects and any registered plugins were called.
+If AveragingTime&amp;gt;0 then NumAveraged_RBV will be the same as NumAverage_RBV. However,
+if AveragingTime=0. then NumAverage_RBV=0 and NumAveraged_RBV gives the actual number
+of values read from the ring buffer when the ReadData record was processed. This
+is also true on the TetrAMM when TriggerMode=ExternalBulb.</p></td>
+</tr>
+<tr class="row-even"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)FastAveragingTime, $(P)$(R)FastAveragingTime_RBV</p></td>
+<td><p>ao, ai</p></td>
+<td><p>asynFloat64</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Controls the time period over which values are averaged with the “fast averaging”
+support when FastAverageScan.SCAN=I/O Intr. This value is converted to NumFastAverage,
+which is then written to the .SVAL field of each ai record.</p></td>
+</tr>
+<tr class="row-odd"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)NumFastAverage</p></td>
+<td><p>longin</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>Provides the number of values that will be averaged in the “fast averaging” support.
+NumFastAverage is computed as (int)((FastAveragingTime / SampleTime_RBV) + 0.5).</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_NUM_ACQUIRE</p></td>
+<td><p>$(P)$(R)NumAcquire
+, $(P)$(R)NumAcquire_RBV</p></td>
+<td><p>longout
+, longin</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>The number of acquisitions to acquire when AcquireMode=Multiple. An acquisition
+is complete when the callbacks are called. This normally occurs when the AveragingTime
+has elapsed. However when TriggerMode=Ext. Bulb then the callbacks are called and
+an acquisition is complete on the trailing edge of each external gate pulse.</p></td>
+</tr>
+<tr class="row-odd"><td><p>QE_NUM_ACQUIRED</p></td>
+<td><p>$(P)$(R)NumAcquired</p></td>
+<td><p>longin</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>The number of acquisitions completed since Acquire was set to 1.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_READ_DATA</p></td>
+<td><p>$(P)$(R)ReadData</p></td>
+<td><p>busy</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>Writing 1 to this record reads all data from the ring buffer and does the NDArray
+callbacks to all registered plugins. This is typically done when the quadEM is being
+used for data acquisition, for example in a scan. In this case AveragingTime is
+set to 0 and processing the ReadData record will read all values that have accumulated
+in the ring buffer since ReadData was last processed.</p></td>
+</tr>
+<tr class="row-odd"><td><p>QE_RING_OVERFLOWS</p></td>
+<td><p>$(P)$(R)RingOverflows</p></td>
+<td><p>longin</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>It is possible for the ring buffer to overflow. The rate at which values are added
+to the ring buffer is controlled by SampleTime_RBV. The rate at which values are
+removed is determined by AveragingTime, or by the rate at which ReadData is processed
+if AveragingTime=0. The size of the ring buffer is determined by the ringBufferSize
+argument to the driver constructor. This defaults to 2048 if it is not specified
+in configuration command in the startup script. If the ring buffer is full when
+the driver tries to add a new value, then the oldest value in the buffer is discarded,
+the new value is added, and RingOverflows is incremented. RingOverflows is set to
+0 the next time the ring buffer is read out.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_TRIGGER_MODE</p></td>
+<td><p>$(P)$(R)TriggerMode</p></td>
+<td><p>mbbo</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>TetrAMM, FX4, AH501, AH401, and PCR4</p></td>
+<td><p>Allowed choices are:</p>
+<ul class="simple">
+<li><p>0: “Free Run” (all models). Ignores any external gate or trigger signal.</p></li>
+<li><p>1: “Software” (possible future choice for TetrAMM) This will trigger a single
+acquisition each time a software trigger command is sent.</p></li>
+<li><p>2: “Ext. Trigger” (TetrAMM, FX4, AH401B, PCR4) This is an edge-sensitive trigger. On the
+TetrAMM this will collect samples for the AveragingTime and then wait for the next
+trigger.</p></li>
+<li><p>3: “Ext. Bulb” (TetrAMM, FX4, AH501D) This is a level-sensitive trigger. It acquires
+data while the external gate signal is asserted. On the trailing edge of the gate
+signal the callbacks will be called. In this mode the AveragingTime is ignored and
+the averaging is done for all samples received between the leading and trailing
+edge of a single gate pulse.</p></li>
+<li><p>4: “Ext. Gate” (TetrAMM, FX4) This is a level sensitive gate. It acquires data while
+the external gate signal is asserted. However, unlike Ext. Bulb the trailing edge
+of the gate signal is ignored, and the averaging is done for NumAverage_RBV samples
+as with Free Run mode. The difference is that the actual averaging time will be
+longer than AveragingTime, and is controlled by the duty cycle of the external gate
+pulse. If the external gate pulse is asserted 40% of the time, then the actual averaging
+time will be AveragingTime * 2.5</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>QE_TRIGGER_POLARITY</p></td>
+<td><p>$(P)$(R)TriggerPolarity</p></td>
+<td><p>mbbo</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>FX4, PCR4</p></td>
+<td><p>0=Positive, 1=Negative.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_RESET</p></td>
+<td><p>$(P)$(R)Reset</p></td>
+<td><p>bo</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Reset command. Processing this record will reset the electrometer. On the TetrAMM
+this does a hardware reset of the device, which takes about 10 seconds. On all models
+this operation downloads all of the EPICS settings to the electrometer. The Reset
+reord must be processed if any electrometer is power-cycled without rebooting the
+EPICS IOC.</p></td>
+</tr>
+<tr class="row-odd"><td><p>QE_CURRENT_NAME</p></td>
+<td><p>$(P)$(R)CurrentName[1-4]</p></td>
+<td><p>stringin</p></td>
+<td><p>N.A.</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>User-defined name to give each of the Current[1-4] inputs.</p></td>
+</tr>
+<tr class="row-even"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)Current[1-4]Ave</p></td>
+<td><p>ai</p></td>
+<td><p>asynFloat64 (addr=0-3)</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>Average current computed by the fast averaging support.</p></td>
+</tr>
+<tr class="row-odd"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)Sum[X,Y,All]Ave</p></td>
+<td><p>ai</p></td>
+<td><p>asynFloat64 (addr=4-6)</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>Average sum (X, Y, All) computed by the fast averaging support.</p></td>
+</tr>
+<tr class="row-even"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)Diff[X,Y]Ave</p></td>
+<td><p>ai</p></td>
+<td><p>asynFloat64 (addr=7-8)</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>Average difference (X, Y) computed by the fast averaging support.</p></td>
+</tr>
+<tr class="row-odd"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)Position[X,Y]Ave</p></td>
+<td><p>ai</p></td>
+<td><p>asynFloat64 (addr=9-10)</p></td>
+<td><p>r/o</p></td>
+<td><p>All</p></td>
+<td><p>Average position (X, Y) computed by the fast averaging support.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_CURRENT_OFFSET</p></td>
+<td><p>$(P)$(R)CurrentOffset[1-4]</p></td>
+<td><p>ao</p></td>
+<td><p>asynFloat64 (addr=0-3)</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Offset that will be subtracted from each reading when calculating the Current[1-4].
+The current is calculated as Current = Raw*CurrentScale - CurrentOffset, where Raw
+is the raw value from the device.</p></td>
+</tr>
+<tr class="row-odd"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)ComputeCurrentOffset[1-4]</p></td>
+<td><p>calcout</p></td>
+<td><p>N.A.</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Processing this record will compute a new value of CurrentOffset that will set value
+of the current to 0 under the current conditions. It computes CurrentOffset(new)
+= Current[1-3]:MeanValue_RBV + CurrentOffset(old). This record is provided to convenience
+set the CurrentOffset when the input signal is 0.</p></td>
+</tr>
+<tr class="row-even"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)CurrentUnits, $(P)$(R)CurrentUnits_RBV</p></td>
+<td><p>mbbo, mbbi</p></td>
+<td><p>N.A.</p></td>
+<td><p>r/w</p></td>
+<td><p>FX4</p></td>
+<td><p>Units of current sent from the device.  Choices are:
+- 0: pA
+- 1: nA
+- 2: uA
+- 3: mA
+- 4: A</p></td>
+</tr>
+<tr class="row-odd"><td><p>QE_CURRENT_SCALE</p></td>
+<td><p>$(P)$(R)CurrentScale[1-4]</p></td>
+<td><p>ao</p></td>
+<td><p>asynFloat64 (addr=0-3)</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Scale factor that each reading is multiplied by when calculating the Current[1-4].
+The current is calculated as Current = Raw*CurrentScale - CurrentOffset, where Raw
+is the raw value from the device. This record provides a way to convert the current
+readings into engineering units. All of the models except the TetrAMM transmit integer
+data. This is converted to double precision float for averaging and statistics.
+It is converted back to integer for the time series software, which requires integer
+data. The TetrAMM transmits double precision data in units of amps, so the values
+are typically between 1e-4 to 1e-12. It is convenient to use a CurrentScale of 1e9
+or 1e12, for example, so that the data are displayed in units of nano-amps or pico-amps.
+They are then reasonable sized integers, and the time series software can be used.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_WEIGHT_XSUM</p></td>
+<td><p>$(P)$(R)WeightXsum[1-4]</p></td>
+<td><p>ao</p></td>
+<td><p>asynFloat64 (addr=0-3)</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Weights applied to each current input when computing SumX in Custom geometry.</p></td>
+</tr>
+<tr class="row-odd"><td><p>QE_WEIGHT_YSUM</p></td>
+<td><p>$(P)$(R)WeightYsum[1-4]</p></td>
+<td><p>ao</p></td>
+<td><p>asynFloat64 (addr=0-3)</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Weights applied to each current input when computing SumY in Custom geometry.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_WEIGHT_XDELTA</p></td>
+<td><p>$(P)$(R)WeightXdelta[1-4]</p></td>
+<td><p>ao</p></td>
+<td><p>asynFloat64 (addr=0-3)</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Weights applied to each current input when computing DiffX in Custom geometry.</p></td>
+</tr>
+<tr class="row-odd"><td><p>QE_WEIGHT_YDELTA</p></td>
+<td><p>$(P)$(R)WeightYdelta[1-4]</p></td>
+<td><p>ao</p></td>
+<td><p>asynFloat64 (addr=0-3)</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Weights applied to each current input when computing DiffY in Custom geometry.</p></td>
+</tr>
+<tr class="row-even"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)Xlabel, $(P)$(R)Ylabel</p></td>
+<td><p>stringin</p></td>
+<td><p>N.A.</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Custom labels for the X and Y axes, used with the Custom geometry.</p></td>
+</tr>
+<tr class="row-odd"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)CurrentPrec[1-4]</p></td>
+<td><p>mbbo</p></td>
+<td><p>N.A.</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Precision (# digits) to use to display the current for this channel. Choices are
+0-9. CurrentPrec1 also controls SumX and DiffX. CurrentPrec3 also controls SumY
+and DiffY. CurrentPrec2 also controls SumAll. Note that when using medm and other
+display clients it is necessary to close and re-open the quadEM screen for the displayed
+precision to be changed. This is a limitation of the Channel Access protocol which
+does not send monitor events when the precision is changed.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_POSITION_OFFSET</p></td>
+<td><p>$(P)$(R)PositionOffset[X,Y]</p></td>
+<td><p>ao</p></td>
+<td><p>asynFloat64 (addr=0-1)</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Offset that will be subtracted from each reading when calculating the Position[X,Y].
+The position is calculated as Position = Diff/Sum * PositionScale - PositionOffset.</p></td>
+</tr>
+<tr class="row-odd"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)ComputePosOffset[X,Y]</p></td>
+<td><p>calcout</p></td>
+<td><p>N.A.</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Processing this record will compute a new value of PositionOffset that will set
+value of the position to 0 under the current conditions. It computes PositionOffset(new)
+= Pos[X,Y]:MeanValue_RBV + PositionOffset(old). This record is provided to convenience
+set the PositionOffset when the position should be defined as 0.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_POSITION_SCALE</p></td>
+<td><p>$(P)$(R)PositionScale[X,Y]</p></td>
+<td><p>ao</p></td>
+<td><p>asynFloat64 (addr=0-1)</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Scale that will be used when calculating the Position[X,Y]. The position is calculated
+as Position = Diff/Sum * PositionScale - PositionOffset.</p></td>
+</tr>
+<tr class="row-odd"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)PositionPrec[X,Y]</p></td>
+<td><p>mbbo</p></td>
+<td><p>N.A.</p></td>
+<td><p>r/w</p></td>
+<td><p>All</p></td>
+<td><p>Precision (# digits) to use to display the position in X or Y. Choices are 0-9.</p></td>
+</tr>
+<tr class="row-even"><td><p>QE_CALIBRATION_MODE</p></td>
+<td><p>$(P)$(R)CalibrationMode</p></td>
+<td><p>bo</p></td>
+<td><p>asynInt32</p></td>
+<td><p>r/w</p></td>
+<td><p>NSLS2_EM</p></td>
+<td><p>Puts driver in calibration mode where ADC offsets can be computed. Choices are Off
+(0) and On (1). The Calibration mode is used to compute the ADC offsets.</p></td>
+</tr>
+<tr class="row-odd"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)ADCOffset[1-4]</p></td>
+<td><p>longout</p></td>
+<td><p>N.A.</p></td>
+<td><p>r/w</p></td>
+<td><p>NSLS2_EM</p></td>
+<td><p>ADC offset for this channel.</p></td>
+</tr>
+<tr class="row-even"><td><p>N.A.</p></td>
+<td><p>$(P)$(R)CopyADCOffsets</p></td>
+<td><p>transform</p></td>
+<td><p>N.A.</p></td>
+<td><p>r/w</p></td>
+<td><p>NSLS2_EM</p></td>
+<td><p>Processing this record will copy the current reading from each channel into the
+ADCOffset[1-4] records. This should only be done when CalibrationMode=On. This does
+an ADC offset calibration that is independent of the Range of the device.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The following is the medm screen to control the quadEM with the records in quadEM.template.</p>
+<figure class="align-center">
+<img alt="_images/quadEM.png" src="_images/quadEM.png" />
+</figure>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="overview.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plugins.html" class="btn btn-neutral float-right" title="Plugins" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Mark Rivers.
+      <span class="lastupdated">Last updated on 2026-October-22.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

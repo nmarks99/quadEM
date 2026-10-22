@@ -1,0 +1,309 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview &mdash; EPICS support for quad electrometers/picoammeters</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/my_theme.css?v=254ed751" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Databases" href="databases.html" />
+    <link rel="prev" title="quadEM" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            quadEM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="databases.html">Databases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="averaging.html">Averaging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tetramm_modes.html">TetrAMM and FX4 Acquisition Modes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tetramm_scanning.html">Scanning with the TetrAMM or FX4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feedback.html">Using Feedback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streaming.html">Streaming data to disk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">quadEM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h1>
+<p><a class="reference external" href="https://github.com/epics-modules/quadEM">quadEM</a> supports quad electrometers/picoammeters, typically used for photodiode-based
+x-ray beam position monitors, or split ion chambers. They can also be used for any
+low-current measurement that requires high speed digital input. There is support
+for several models:</p>
+<ul class="simple">
+<li><p>The TetrAMM picoammeter sold by <a class="reference external" href="http://www.caenels.com/products">CAENels</a>.
+This device communicates using TCP/IP over 1 Gbit/s Ethernet. It provides 4-channel
+current measurements measured at 100 kHz and streamed to EPICS at up to 20 kHz.</p></li>
+<li><p>The FX4 electrometer from <a class="reference external" href="https://pyramid.tech/category/electrometers">Pyramid</a>. This is also sold by <a class="reference external" href="https://xds-oxford.com/products/detectors-diagnostics/control-modules/">XDSOxford</a> for the synchrotron market.
+This device communicates using TCP/IP over 1 Gbit/s Ethernet. It provides 4-channel
+current measurements measured at 100 kHz and streamed to EPICS at up to 25 kHz.
+The FX4 has a high-performance Web interface for configuration and viewing live data.
+It also has a built-in EPICS Channel Access server which provides read/write access to
+all parameters.  These are also all available over a REST API. It also supports streaming
+ADC data and all parameters over WebSocket interface using either JSON (ASCII) or
+MessagePack (binary) formats.  The EPICS driver uses MessagePack because it is faster and
+more efficient in CPU and network resources.</p></li>
+<li><p>The AH401 series (AH401B, AH401D) and AH501 series (AH501, AH501C, AH501D) picoammeters
+originally designed by <a class="reference external" href="http://www.elettra.eu/technology/industry/elettra-for-industry.html">Elettra</a>. They are now sold commerically by <a class="reference external" href="http://www.caenels.com/products">CAENels</a>.
+These devices communicate using TCP or UDP over 100 Mbit/s Ethernet
+or high-speed serial. They provide 4-channel current measurements at up to 6510
+Hz (AH501 series) or 1000 Hz (AH401 series).
+They use an ASCII protocol for configuration and streams data either in ASCII or
+binary (24-bit integer) formats.  The binary format has no terminators or other
+synchronization, so it is susceptible to corruption if any data is lost.</p></li>
+<li><p>The NSLS Quad Electrometer (called NSLS_EM in this document). This device consists
+of a 4-channel digital electrometer unit with Ethernet communication. The device
+provides 4-channel current measurements at up to 2500 Hz.
+The <a class="reference external" href="https://sydortechnologies.com/x-ray-beam-monitors/sydor-t4u-readout-electrometer">Sydor</a> SI-EP-B4 is based on this design and is software comptabible.</p></li>
+<li><p>The NSLS2 Quad Electrometer (called NSLS2_EM in this document). This device consists
+of a 4-channel digital electrometer unit with Ethernet communication. The device
+provides 4-channel current measurements at up to 10,000 Hz. This design is based
+on a transconductance amplifier and can measure currents into the mA range, unlike
+the NSLS_EM which is based on a current integration chip and is limited to currents
+less than about 1 micro-amp. This unit is packaged with a Zynq processing and run
+this EPICS IOC software internally.</p></li>
+<li><p>The PCR4 picoammeter from <a class="reference external" href="https://www.sensic.ch/products/electronic-readout">SenSiC</a>.
+This device communicates using TCP/IP over 1 Gbit/s Ethernet.
+It provides 4-channel current measurements at up to 53,000 Hz.</p></li>
+<li><p>The T4U electrometer from <a class="reference external" href="https://sydortechnologies.com/x-ray-beam-monitors/sydor-t4u-readout-electrometer">Sydor</a>.
+It provides 4-channel current measurements at up to 2,500Hz.</p></li>
+</ul>
+<p>The AH401 series and NSLS_EM are based on the same principle of an op-amp
+run as a current amplifier with a large feedback capacitor, and a high resolution
+ADC. The FX4, TetrAMM, AH501 series, NSLS2_EM, PCR4, and T4U are based on a transimpedance input
+stage for current sensing, combined with analog signal conditioning and filtering
+stages. The TetrAMM, FX4, AH501C, and AH501D have an integrated programmable bias supply.</p>
+<p>The <a class="reference external" href="https://github.com/epics-modules/quadEM">quadEM</a> software includes asyn drivers that provide support for the following:</p>
+<ul class="simple">
+<li><p>Analog input records using the NDPluginStats plugin from the synApps
+areaDetector <a class="reference external" href="https://github.com/areaDetector/ADCore">ADCore</a> module. This provides digitally averaged readings of the current,
+sum, difference and position at speeds that are determined by the AveragingTime
+record described below. The quadEM drivers do the callbacks on the asynGenericPointer
+interface for NDArray objects required to use the areaDetector plugins. The NDPluginStats
+module is used to compute the averaged readings. It also provides additional statistics
+including standard deviation, min, max, and a histogram of values. This averaging
+is termed the “primary averaging”.</p></li>
+<li><p>Analog input records using the asynFloat64Average device support from asyn. These
+records can either process at the standard EPICS scan rates, normally 10Hz to 0.1
+Hz. Beginning with asyn R4-34 they can also use SCAN=I/O Intr, which allows them
+average and process at any integer divisor of the device sampling rate. This averaging
+is termed “fast averaging”, though it does not necessarily run faster than the primary
+averaging described above.</p></li>
+<li><p>The NDPluginStats plugin provides time-series of the statistics. These can be used to
+for on-the-fly data acquisition applications, where the meter is triggered by an
+external pulse source, such as one derived from a motor motion.</p></li>
+<li><p>One could also use the standard asynFloat64 device support with ai records and
+scan=I/O Intr, in which case the record would update with every reading from the
+device. This is likely to overwhelm the EPICS IOC if the electrometer is run at
+very fast sampling times.</p></li>
+<li><p>Streaming data to disk at the full rate from the device. This is done using the
+file plugins from <a class="reference external" href="https://github.com/areaDetector/ADCore">ADCore</a>.</p></li>
+<li><p>Time series data (like a digital scope) of the current, sum, difference and position
+at speeds up to 20000 Hz (TetrAMM), 6510 Hz (AH501 series), 1000 Hz (AH401 series)
+2500 Hz (NSLS_EM, T4U). The data is available in standard EPICS waveform
+records, using the <a class="reference external" href="https://areadetector.github.io/areaDetector/ADCore/NDPluginTimeSeries.html">NDPluginTimeSeries</a> plugin from <a class="reference external" href="https://github.com/areaDetector/ADCore">ADCore</a>.
+The time per point can be greater than the sampling period of the meter,
+in which case it does averaging.</p></li>
+<li><p>FFTs of the time series data, providing the power spectrum of each signal as another
+EPICS waveform record. This uses the <a class="reference external" href="https://areadetector.github.io/areaDetector/ADCore/NDPluginFFT.html">NDPluginFFT</a> plugin from <a class="reference external" href="https://github.com/areaDetector/ADCore">ADCore</a>.</p></li>
+</ul>
+<p>The following manuals provide detailed information on these devices:</p>
+<ul class="simple">
+<li><p><a class="reference download internal" download="" href="_downloads/0e72ce1e528787b3a6a2833cb32f2a48/TetrAMM_UsersManual_V1.5.pdf"><code class="xref download docutils literal notranslate"><span class="pre">TetrAMM</span> <span class="pre">Users</span> <span class="pre">Manual</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="_downloads/94cff6d1c0e26d3e592fd756a0737f63/FX4_User_Manual_v1.pdf"><code class="xref download docutils literal notranslate"><span class="pre">FX4</span> <span class="pre">User</span> <span class="pre">Manual</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="_downloads/9a221c5f2094a1057ac5d2210396c352/FX4_Programmer_Manual_v3.pdf"><code class="xref download docutils literal notranslate"><span class="pre">FX4</span> <span class="pre">Programmer</span> <span class="pre">Manual</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="_downloads/8d28d194bc88e753930cf519b4562b9c/AH401B_UsersManual_V1.0.pdf"><code class="xref download docutils literal notranslate"><span class="pre">AH401B</span> <span class="pre">Users</span> <span class="pre">Manual</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="_downloads/18785c9141c55d2f0fe1909518f4f9c5/AH401D_UsersManual_V1.2.pdf"><code class="xref download docutils literal notranslate"><span class="pre">AH401D</span> <span class="pre">Users</span> <span class="pre">Manual</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="_downloads/cc991cfac763113d795ca94651b39f90/AH501C_UsersManual_V1.0.pdf"><code class="xref download docutils literal notranslate"><span class="pre">AH501C</span> <span class="pre">Users</span> <span class="pre">Manual</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="_downloads/378352b9fc2420296dd7ca7be8f8d16d/AH501D_UsersManual_V1.3.pdf"><code class="xref download docutils literal notranslate"><span class="pre">AH501D</span> <span class="pre">Users</span> <span class="pre">Manual</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="_downloads/5a310ce0167cc631da7a79a430259a84/T4U_OperatorsManual_RevF.pdf"><code class="xref download docutils literal notranslate"><span class="pre">T4U</span> <span class="pre">Operators</span> <span class="pre">Manual</span></code></a></p></li>
+</ul>
+<p>The support is based on <a class="reference external" href="https://areadetector.github.io/areaDetector/ADCore/NDArray.html#asynndarraydriver">asynNDArrayDriver</a> from <a class="reference external" href="https://github.com/areaDetector/ADCore">ADCore</a>, which in turn is based on <a class="reference external" href="https://epics-modules.github.io/asyn/asynPortDriver.html">asynPortDriver</a>.
+It consists of a base class drvQuadEM, which is device-independent.
+There are device-dependent classes for the TetrAMM, AH401 and AH501 series, NSLS,
+NSLS2, PCR4, T4U, and softQuad electrometers.</p>
+<p>The quadEM driver works as follows:</p>
+<ul class="simple">
+<li><p>The data from the device-dependent drivers are first placed into a ring buffer
+whose size is defined in the constructor and configuration function. The driver
+provides 4 current readings. 7 additional values are computed from these 4 values:
+SumX, SumY, SumAll, DiffX, DiffY, PositionX, PositionY. The meanings of X and Y
+are discussed in the geometry section below.</p></li>
+<li><p>The PV called AveragingTime determines the time period over which to average the
+readings. The AveragingTime divided by the SampleTime determines the number of samples
+to average, NumAverage_RBV. When this number of samples have been accumulated in
+the ring buffer a separate thread copies them to a set of NDArrays and calls any
+registered plugins.</p></li>
+<li><p>There is a separate NDPluginStats plugin loaded for each of the 11 data values.
+This plugin receives an array of dimensions [NumAverage_RBV]. This plugin computes
+not only the mean, but also the standard deviation, histogram of values, etc.</p></li>
+<li><p>One of the NDArrays contains all of the data values, and has dimensions [11,NumAverage_RBV].
+This array can be passed to any of the file writing plugins, which can thus stream
+all of the data to disk for arbitrarily long time periods.</p></li>
+<li><p>The [11,NumAverage_RBV] NDArray is also passed to the NDPluginTimeSeries plugin
+which is used to generate time-series arrays.</p></li>
+<li><p>The time-series plugin output is used by the NDPluginFFT plugin to compute FFTs,
+producing arrays containing the frequency power-spectrum of the time series data.</p></li>
+<li><p>The commonPlugins.cmd from ADCore is also loaded, which provides ROIs, file plugins
+and many others.  The ROI plugin can be used, for example, to extract just the 4
+currents from the [11, NumAverage_RBV] array and pass the [4, NumAverage_RBV] NDArrays
+to the HDF5 file writer.</p></li>
+<li><p>The NDPluginStdArrays, and NDPluginPVA plugin to pass all the data [11,NumAverage_RBV]
+or any of the individual data arrays to any channel access or pvAccess client.</p></li>
+<li><p>The computationally intensive work of calculating the statistics is done in plugins,
+so can be done in different threads (if CallbacksBlock is set to No), each potentially
+running in a separate core on modern CPUs.</p></li>
+<li><p>In addition to placing the data from each time point into the ring buffer, the
+driver does callbacks on the asynFloat64 interface for each data value. This is
+used for fast averaging support with ai records. These records can be processed periodically
+with SCAN=1 second, 0.1 second, etc., or they can have SCAN=I/O Intr. In this case
+the ai record device support sums the callback readings until NumAverage readings
+have been received, at which point the average is computed and the record is processed.
+he quadEM database computes NumAverage from the FastAveragingTime record and writes
+NumAverage to the .SVAL field in each ai record.</p></li>
+</ul>
+<p>Note: This version of the driver requires a minimum firmware version on some models</p>
+<ul class="simple">
+<li><p>AH501D Firmware version 2.0.</p></li>
+<li><p>TetrAMM Firmware version 2.9.11</p></li>
+</ul>
+<p>Prior to R5-0 the quadEM driver assumed the following geometry for the 4 currents:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="mi">4</span>
+
+<span class="mi">1</span>     <span class="mi">2</span>
+
+   <span class="mi">3</span>
+</pre></div>
+</div>
+<p>The PV for the computed quantities were called Sum12, Sum34, Sum1234, Diff12, Diff34,
+Position12, and Position34. The differences, and hence positions, were computed
+as 2-1 and 4-3, which would correspond to Position12 being positive to the right
+and Position34 being positive up in the above diagram.</p>
+<p>For R5-0 and later two geometries are supported, and the names of the Sum, Diff
+and Position PVs were changed. The computed quantities are called SumX, SumY, SumAll,
+DiffX, DiffY, PositionX, and PositionY.</p>
+<p>The first geometry is the same as that illustrated above, and is called Diamond.
+For this geometry only 2 diodes are used for the position calculation in each direction.
+SumX=(1+2), SumY=(3+4), DiffX=(2-1), DiffY=(4-3). This geometry is identical to
+the geometry assumed prior to R5-0. The X diodes are 1&amp;2 rather than 1&amp;3 so that
+it is possible to use just the first 2 inputs on the AH501 series to increase readout
+speed in cases where all 4 diodes are not used. This would not be possible if diodes
+1 and 3 were used for the X calculations.</p>
+<p>The second geometry is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span>     <span class="mi">2</span>
+
+
+<span class="mi">4</span>     <span class="mi">3</span>
+</pre></div>
+</div>
+<p>This geometry is called Square. For this geometry all 4 diodes are used for the
+position calculation in each direction. SumX=SumY=(1+2+3+4), DiffX=(2+3)-(1+4),
+DiffY=(1+2)-(3+4).</p>
+<p>R9-5 added a variant of the square geometry, SquareCC:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span>     <span class="mi">4</span>
+
+
+<span class="mi">2</span>     <span class="mi">3</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>It is similar to Square, but the 4 diodes are arranged counterclockwise.
+SumX=SumY=(1+2+3+4), DiffX=(3+4)-(1+2), DiffY=(1+4)-(2+3).</p></li>
+</ul>
+<p>A Custom geometry is also available for non-standard detector arrangements. In this mode
+the user provides a set of four weights for each of the computed values (SumX, SumY, DiffX,
+DiffY). Each output is computed as the weighted sum of the four input currents. Custom axis
+labels can also be set via the Xlabel and Ylabel PVs.</p>
+<p>For all geometries SumAll=(1+2+3+4), PositionX=DiffX/SumX, and PositionY=DiffY/SumY.
+X positive is to the right and Y positive is up for the standard geometries.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="quadEM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="databases.html" class="btn btn-neutral float-right" title="Databases" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Mark Rivers.
+      <span class="lastupdated">Last updated on 2026-October-22.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
